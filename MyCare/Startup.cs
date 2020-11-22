@@ -6,10 +6,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MyCare.Domin;
+using MyCare.Services.Repositories;
+using MyCare.Services.Repositories.Interfaces;
+using MyCare.Services.Services;
+using MyCare.Services.Services.Interfaces;
 
 namespace MyCare
 {
@@ -26,6 +32,18 @@ namespace MyCare
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<MyCareDBContext>(option =>
+            {
+                option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            var myCareDbContext = new MyCareDBContext();
+
+            services.AddScoped<IPeopleRepository>(sp => new PeopleRepository(myCareDbContext));
+            services.AddScoped<ITimesheetRepository>(sp => new TimesheetRepository(myCareDbContext));
+            services.AddScoped<IPeopleService, PeopleService>();
+            services.AddScoped<ITimesheetService, TimesheetService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

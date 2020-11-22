@@ -4,5 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MyCare.Domin\MyCare.Domin.csproj" />
+    <ProjectReference Include="..\MyCare.Services\MyCare.Services.csproj" />
+  </ItemGroup>
+
 
 </Project>
